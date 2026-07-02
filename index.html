@@ -752,6 +752,145 @@ async function init() {
   }
 }
 init();
+
+// ── PUSH NOTIFICATIONS ──
+let swRegistration = null;
+
+async function initNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.log('Push not supported');
+    return;
+  }
+  try {
+    swRegistration = await navigator.serviceWorker.register('/sw.js');
+    console.log('Service worker registered');
+  } catch(e) {
+    console.log('SW registration failed:', e);
+  }
+}
+
+async function requestNotificationPermission() {
+  if (!swRegistration) await initNotifications();
+  if (!swRegistration) {
+    alert('Push notifications not supported on this browser.');
+    return false;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') {
+    alert('Please allow notifications to receive FPL alerts.');
+    return false;
+  }
+
+  try {
+    // Get VAPID public key
+    const vapidRes = await fetch('/api/vapid');
+    const { publicKey } = await vapidRes.json();
+
+    const subscription = await swRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey)
+    });
+
+    // Save subscription to server
+    await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription })
+    });
+
+    // Store locally too
+    localStorage.setItem('pushSubscription', JSON.stringify(subscription));
+    localStorage.setItem('notificationsEnabled', 'true');
+
+    showNotificationStatus(true);
+    return true;
+  } catch(e) {
+    console.error('Subscription failed:', e);
+    alert('Could not subscribe to notifications: ' + e.message);
+    return false;
+  }
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+function showNotificationStatus(enabled) {
+  const btn = document.getElementById('notif-btn');
+  if (!btn) return;
+  if (enabled) {
+    btn.textContent = '🔔 Alerts on';
+    btn.style.background = 'var(--green-bg)';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green-border)';
+  } else {
+    btn.textContent = '🔕 Enable alerts';
+    btn.style.background = 'var(--surface2)';
+    btn.style.color = 'var(--text2)';
+    btn.style.borderColor = 'rgba(255,255,255,0.08)';
+  }
+}
+
+async function toggleNotifications() {
+  const enabled = localStorage.getItem('notificationsEnabled') === 'true';
+  if (enabled) {
+    localStorage.removeItem('notificationsEnabled');
+    localStorage.removeItem('pushSubscription');
+    showNotificationStatus(false);
+  } else {
+    await requestNotificationPermission();
+  }
+}
+
+// Check notification status on load
+function checkNotificationStatus() {
+  const enabled = localStorage.getItem('notificationsEnabled') === 'true';
+  showNotificationStatus(enabled);
+}
+
+// Inject notification button into sidebar footer and mobile home
+function injectNotifButton() {
+  const footer = document.querySelector('.sb-footer');
+  if (footer) {
+    footer.innerHTML = `
+      <button id="notif-btn" onclick="toggleNotifications()" style="width:100%;padding:8px 12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.08);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;text-align:left;transition:all .15s">
+        🔕 Enable alerts
+      </button>
+      <div style="margin-top:8px;font-size:10px;color:var(--text3)">Team ID: 3008614</div>
+    `;
+  }
+  // Also add to mobile home screen below chip status
+  const homeScreen = document.getElementById('sc-home');
+  if (homeScreen) {
+    const mobileNotif = document.createElement('div');
+    mobileNotif.style.marginTop = '16px';
+    mobileNotif.innerHTML = `
+      <button id="notif-btn-mobile" onclick="toggleNotifications()" style="width:100%;padding:12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.08);background:var(--surface2);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">
+        🔕 Enable FPL alerts
+      </button>
+    `;
+    homeScreen.appendChild(mobileNotif);
+  }
+}
+
+// What alerts will fire:
+// - Any owned player changes to injured/suspended/doubtful
+// - High form players not owned with price rise
+// - GW deadline within 48 hours
+// Triggered by cron-job.org hitting /api/alert every 30 mins on match days
+
+
+// Init notifications
+injectNotifButton();
+initNotifications();
+checkNotificationStatus();
 </script>
 </body>
 </html>
+<!-- notification bootstrap - injected -->
