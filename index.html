@@ -53,15 +53,37 @@ body{
 
 /* ───────── MOBILE ───────── */
 @media (max-width:767px){
-  body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;overflow:hidden;height:100vh;height:-webkit-fill-available}
+  html{height:100%}
+  body{
+    display:flex;flex-direction:column;
+    max-width:430px;margin:0 auto;
+    height:100%;
+    overflow:hidden;
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    max-width:100%;
+  }
   #sidebar{display:none}
-  #strip{padding:10px 14px;flex-shrink:0}
-  #content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;min-height:0}
-  .screen{display:none;padding:14px 14px calc(var(--nav-h) + 40px)}
+  #strip{flex-shrink:0;padding:10px 14px}
+  #content{
+    flex:1;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    min-height:0;
+    position:relative;
+  }
+  .screen{display:none;padding:14px 14px 100px}
   .screen.active{display:block}
-  #nav{display:flex;flex-shrink:0}
-  .hero-clock .seg-num{font-size:44px}
-  .screen-title{font-size:24px}
+  #nav{
+    flex-shrink:0;
+    display:flex;
+    height:var(--nav-h);
+    position:relative;
+    z-index:50;
+  }
+  .hero-clock .seg-num{font-size:40px}
+  .screen-title{font-size:22px}
   .dec-grid{grid-template-columns:1fr}
   .stat-band{grid-template-columns:repeat(3,1fr)}
   .chip-grid{grid-template-columns:1fr 1fr}
@@ -69,7 +91,7 @@ body{
 }
 /* ───────── DESKTOP ───────── */
 @media (min-width:768px){
-  body{display:flex;flex-direction:row;height:100vh;overflow:hidden}
+  body{display:flex;flex-direction:row;height:100vh;overflow:hidden;position:static}
   #nav{display:none}
   #sidebar{
     width:var(--sidebar-w);flex-shrink:0;height:100vh;overflow:hidden;
@@ -162,6 +184,9 @@ body{
 .sb-btn.active .idx{color:var(--green)}
 .sb-foot{padding:14px 16px;border-top:1px solid var(--line)}
 .sb-id{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--text3s);margin-top:10px}
+
+/* ───────── MAIN WRAPPER ───────── */
+#main{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 
 /* ───────── MOBILE NAV ───────── */
 #nav{
