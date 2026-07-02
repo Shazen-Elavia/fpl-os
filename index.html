@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0D0D0D">
@@ -25,13 +25,105 @@
   --blue: #4D9FFF;
   --radius: 12px;
   --nav-h: 68px;
+  --sidebar-w: 220px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif;max-width:430px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif}
 
-/* Deadline strip */
-#strip{position:relative;z-index:10;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.05);background:var(--bg);flex-shrink:0}
+/* ── MOBILE LAYOUT ── */
+@media (max-width: 767px) {
+  body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;overflow:hidden;height:100vh}
+  #sidebar{display:none}
+  #strip{position:relative;z-index:10;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.05);background:var(--bg);flex-shrink:0}
+  #content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .screen{display:none;padding:12px 16px calc(var(--nav-h) + 20px)}
+  .screen.active{display:block}
+  #nav{display:flex;position:relative;z-index:10;height:var(--nav-h);background:rgba(13,13,13,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.07);align-items:center;flex-shrink:0}
+  .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:8px 0;border:none;background:transparent;color:var(--text3);font-size:10px;letter-spacing:.2px;transition:color .15s}
+  .nb.active{color:var(--green)}
+  .nb svg{width:21px;height:21px;stroke-width:1.5}
+  .desktop-strip{display:none}
+}
+
+/* ── DESKTOP LAYOUT ── */
+@media (min-width: 768px) {
+  body{display:flex;flex-direction:row;height:100vh;overflow:hidden}
+  #nav{display:none}
+
+  /* Sidebar */
+  #sidebar{
+    width:var(--sidebar-w);
+    flex-shrink:0;
+    background:var(--surface);
+    border-right:1px solid rgba(255,255,255,0.06);
+    display:flex;
+    flex-direction:column;
+    padding:0;
+    height:100vh;
+    overflow:hidden;
+  }
+  .sb-logo{
+    padding:24px 20px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .sb-logo-title{font-size:20px;font-weight:800;letter-spacing:-1px;color:var(--green)}
+  .sb-logo-sub{font-size:11px;color:var(--text3);margin-top:2px}
+  .sb-deadline{
+    padding:14px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .sb-nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+  .sb-btn{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:var(--radius);
+    cursor:pointer;border:none;background:transparent;
+    color:var(--text2);font-size:13px;font-weight:500;
+    transition:all .15s;width:100%;text-align:left;
+  }
+  .sb-btn:hover{background:var(--surface2);color:var(--text)}
+  .sb-btn.active{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+  .sb-btn svg{width:18px;height:18px;stroke-width:1.5;flex-shrink:0}
+  .sb-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:var(--text3)}
+
+  /* Main content area */
+  #main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:hidden;
+    background:var(--bg);
+  }
+  #strip{
+    padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  #content{flex:1;overflow-y:auto;overflow-x:hidden}
+  .screen{display:none;padding:28px 28px 40px}
+  .screen.active{display:block}
+
+  /* Desktop grid layouts */
+  .desktop-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .desktop-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .stat-row{grid-template-columns:repeat(4,1fr)}
+  .chip-grid{grid-template-columns:repeat(4,1fr)}
+
+  /* Wider pitch */
+  .pitch{max-width:600px;margin-left:auto;margin-right:auto}
+  .p-row{gap:8px}
+  .pshirt{width:44px;height:44px;font-size:11px}
+  .pname{font-size:11px;max-width:80px}
+  .ppts{font-size:12px}
+
+  /* Desktop screen title */
+  .screen-title{font-size:26px;font-weight:800;letter-spacing:-.8px;margin-bottom:20px}
+  .card{padding:18px 20px}
+}
+
+/* ── SHARED STYLES ── */
 .d-left{display:flex;align-items:center;gap:10px}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dot.safe{background:var(--green);box-shadow:0 0 8px var(--green);animation:glow 2s infinite}
@@ -42,92 +134,64 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .d-time{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
 .d-time.safe{color:var(--green)}.d-time.warn{color:var(--amber)}.d-time.danger{color:var(--red)}
 .gw-pill{font-size:11px;color:var(--text2);background:var(--surface);padding:4px 10px;border-radius:20px;font-weight:600}
-
-/* Scrollable content area */
-#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.screen{display:none;padding:12px 16px calc(var(--nav-h) + 20px)}
-.screen.active{display:block}
-
-/* Nav */
-#nav{position:relative;z-index:10;height:var(--nav-h);background:rgba(13,13,13,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;flex-shrink:0}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:8px 0;border:none;background:transparent;color:var(--text3);font-size:10px;letter-spacing:.2px;transition:color .15s}
-.nb.active{color:var(--green)}
-.nb svg{width:21px;height:21px;stroke-width:1.5}
-
-/* Typography */
 .screen-title{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px}
 .section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:8px;margin-top:16px}
-
-/* Cards */
 .card{background:var(--surface);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.04)}
 .card.accent{border-color:var(--green-border);background:var(--green-bg)}
 .card.warn-card{border-color:rgba(255,184,0,0.2);background:rgba(255,184,0,0.05)}
-
-/* Stats row */
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .stat{background:var(--surface);border-radius:10px;padding:12px 8px;text-align:center}
 .stat-val{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
 .stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--amber)}
 .stat-lbl{font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
-
-/* Decision cards */
 .dec-grid{display:grid;gap:8px;margin-bottom:16px}
+@media(min-width:768px){.dec-grid{grid-template-columns:1fr 1fr 1fr}}
 .dec{background:var(--surface);border-radius:var(--radius);padding:14px 16px;border:1px solid rgba(255,255,255,0.04);position:relative;overflow:hidden}
 .dec-type{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:5px}
 .dec-name{font-size:21px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
 .dec-sub{font-size:12px;color:var(--text2);margin-top:3px}
 .dec-score{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;line-height:1}
-
-/* Pitch */
 .pitch{background:linear-gradient(180deg,#081a0d 0%,#0b2210 50%,#081a0d 100%);border-radius:var(--radius);padding:14px 10px;margin-bottom:10px;border:1px solid rgba(0,255,135,0.08);position:relative}
 .pitch::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:1px;background:rgba(0,255,135,0.07)}
 .pitch::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,135,0.07)}
 .p-row{display:flex;justify-content:center;gap:4px;margin-bottom:14px}
 .p-row:last-child{margin-bottom:0}
-.pslot{text-align:center;flex:1;max-width:68px;cursor:pointer}
+.pslot{text-align:center;flex:1;max-width:80px;cursor:pointer}
 .pshirt{width:34px;height:34px;border-radius:8px;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;position:relative;transition:transform .1s}
 .pshirt:active{transform:scale(.93)}
 .pshirt.cap::after,.pshirt.vc::after{position:absolute;top:-5px;right:-5px;font-size:8px;font-weight:800;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .pshirt.cap::after{content:'C';background:var(--amber);color:#000}
 .pshirt.vc::after{content:'V';background:var(--text2);color:#000}
 .pshirt.inj::before{content:'!';position:absolute;top:-4px;left:-4px;background:var(--red);color:#fff;font-size:7px;font-weight:800;width:12px;height:12px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.pname{font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px}
+.pname{font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;margin:0 auto}
 .ppts{font-size:10px;color:var(--green);font-weight:700;font-variant-numeric:tabular-nums}
 .pprice{font-size:8px;color:var(--text3)}
 .s-gkp{background:rgba(255,184,0,.18);color:var(--amber)}
 .s-def{background:rgba(0,255,135,.12);color:var(--green)}
 .s-mid{background:rgba(77,159,255,.15);color:var(--blue)}
 .s-fwd{background:rgba(255,69,69,.12);color:var(--red)}
-
-/* Tags */
 .tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;display:inline-block}
 .t-gkp{background:rgba(255,184,0,.15);color:var(--amber)}
 .t-def{background:rgba(0,255,135,.12);color:var(--green)}
 .t-mid{background:rgba(77,159,255,.15);color:var(--blue)}
 .t-fwd{background:rgba(255,69,69,.12);color:var(--red)}
-
-/* FDR */
 .fdr-scroll{overflow-x:auto;border-radius:var(--radius);margin-bottom:10px}
 .fdr-scroll::-webkit-scrollbar{display:none}
 .fdr-tbl{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}
-.fdr-tbl th{color:var(--text3);font-weight:500;padding:6px 4px;text-align:center;font-size:10px}
-.fdr-tbl th:first-child{text-align:left;padding-left:10px;min-width:50px}
-.fdr-tbl td{padding:4px 3px;text-align:center}
-.fdr-tbl td:first-child{text-align:left;padding-left:10px;font-weight:600;font-size:11px}
+.fdr-tbl th{color:var(--text3);font-weight:500;padding:8px 5px;text-align:center;font-size:10px}
+.fdr-tbl th:first-child{text-align:left;padding-left:12px;min-width:55px}
+.fdr-tbl td{padding:5px 4px;text-align:center}
+.fdr-tbl td:first-child{text-align:left;padding-left:12px;font-weight:600;font-size:12px}
 .fdr-tbl tr{border-bottom:1px solid rgba(255,255,255,0.03)}
-.fc{border-radius:4px;padding:4px 3px;font-size:9px;font-weight:700;display:inline-block;min-width:36px}
+.fc{border-radius:4px;padding:5px 4px;font-size:10px;font-weight:700;display:inline-block;min-width:42px}
 .fc1{background:#00513C;color:#00FF87}.fc2{background:#006644;color:#7FFFC4}
 .fc3{background:#333;color:#888}.fc4{background:#7A2800;color:#FFB07C}.fc5{background:#7A0000;color:#FF9090}
-
-/* Transfer */
 .tr-out{border-left:2px solid var(--red);padding-left:12px;margin-bottom:12px}
 .tr-in{border-left:2px solid var(--green);padding-left:12px}
 .tr-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
 .tr-lbl.out{color:var(--red)}.tr-lbl.in{color:var(--green)}
 .tr-player{font-size:18px;font-weight:700;letter-spacing:-.3px}
 .tr-meta{font-size:11px;color:var(--text2)}
-
-/* Chip */
 .chip-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .chip-c{background:var(--surface);border-radius:var(--radius);padding:12px;border:1px solid rgba(255,255,255,0.04)}
 .chip-n{font-size:12px;font-weight:700;margin-bottom:3px}
@@ -136,36 +200,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cs.av{background:rgba(0,255,135,.1);color:var(--green)}
 .cs.used{background:rgba(255,69,69,.1);color:var(--red)}
 .cs.act{background:var(--green);color:#000}
-
-/* Buttons */
 .btn{display:block;width:100%;padding:14px;border-radius:var(--radius);font-size:14px;font-weight:700;border:none;cursor:pointer;text-align:center;transition:all .12s;letter-spacing:-.2px}
 .btn-p{background:var(--green);color:#000}.btn-p:active{transform:scale(.98);background:var(--green-dim)}
 .btn-s{background:var(--surface2);color:var(--text);border:1px solid rgba(255,255,255,0.07)}.btn-s:active{transform:scale(.98)}
 .btn-sm{padding:10px 14px;font-size:13px}
-
-/* Brief */
 #brief-out{font-size:14px;line-height:1.75;color:var(--text2);white-space:pre-wrap;word-break:break-word}
 .thinking{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);padding:10px 0}
 .td{width:5px;height:5px;border-radius:50%;background:var(--green);animation:glow 1s infinite}
 .td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
-
-/* Rank history */
-.rh{display:flex;align-items:flex-end;gap:3px;height:44px;margin-top:8px}
-.rb{flex:1;border-radius:3px 3px 0 0;background:var(--surface3);min-height:3px}
-.rb.best{background:var(--green)}
-
-/* Loading / error */
 .loading{text-align:center;padding:40px 16px}
 .spin{width:28px;height:28px;border:2px solid rgba(0,255,135,.1);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading p{font-size:12px;color:var(--text3)}
 .err{background:rgba(255,69,69,.07);border:1px solid rgba(255,69,69,.2);border-radius:var(--radius);padding:12px 14px;font-size:12px;color:#FF9090;line-height:1.5}
-
-/* Scrollable bench */
 .bench-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
 .bench-scroll::-webkit-scrollbar{display:none}
-
-/* History table */
 .hist-row{display:grid;grid-template-columns:40px 1fr 1fr 1fr;gap:4px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;align-items:center}
 .hist-row:last-child{border-bottom:none}
 .hist-head{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
@@ -173,113 +222,160 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </head>
 <body>
 
-<div id="strip">
-  <div class="d-left">
-    <div class="dot safe" id="ddot"></div>
-    <div>
-      <div class="d-lbl">Next deadline</div>
-      <div class="d-time safe" id="dtime">Loading...</div>
+<!-- SIDEBAR (desktop only) -->
+<div id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-title">FPL OS</div>
+    <div class="sb-logo-sub">Season 2025/26</div>
+  </div>
+  <div class="sb-deadline">
+    <div class="d-left">
+      <div class="dot safe" id="ddot-sb"></div>
+      <div>
+        <div class="d-lbl">Next deadline</div>
+        <div class="d-time safe" id="dtime-sb">Loading...</div>
+      </div>
     </div>
   </div>
-  <div class="gw-pill" id="gwpill">GW—</div>
+  <nav class="sb-nav">
+    <button class="sb-btn active" onclick="go('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="sb-btn" onclick="go('team',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      My Squad
+    </button>
+    <button class="sb-btn" onclick="go('fix',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      Fixture Difficulty
+    </button>
+    <button class="sb-btn" onclick="go('tr',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      Transfer Lab
+    </button>
+    <button class="sb-btn" onclick="go('brief',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Weekly Brief
+    </button>
+  </nav>
+  <div class="sb-footer">Team ID: 3008614</div>
 </div>
 
-<div id="content">
-  <!-- HOME -->
-  <div class="screen active" id="sc-home">
-    <div class="screen-title">FPL OS</div>
-    <div class="stat-row" id="h-stats">
-      <div class="stat"><div class="stat-val g" id="h-rank">—</div><div class="stat-lbl">Rank</div></div>
-      <div class="stat"><div class="stat-val" id="h-pts">—</div><div class="stat-lbl">Total pts</div></div>
-      <div class="stat"><div class="stat-val" id="h-gw">—</div><div class="stat-lbl">GW pts</div></div>
+<!-- MAIN -->
+<div id="main">
+  <!-- Top strip -->
+  <div id="strip">
+    <div class="d-left">
+      <div class="dot safe" id="ddot"></div>
+      <div>
+        <div class="d-lbl">Next deadline</div>
+        <div class="d-time safe" id="dtime">Loading...</div>
+      </div>
     </div>
-    <div class="section-lbl">This week's decisions</div>
-    <div id="dec-grid" class="dec-grid">
-      <div class="loading"><div class="spin"></div><p>Loading your team...</p></div>
-    </div>
-    <div class="section-lbl">Chip status</div>
-    <div id="chip-mini" class="chip-grid"></div>
+    <div class="gw-pill" id="gwpill">GW—</div>
   </div>
 
-  <!-- MY TEAM -->
-  <div class="screen" id="sc-team">
-    <div class="screen-title">My squad</div>
-    <div id="team-body">
-      <div class="loading"><div class="spin"></div><p>Building pitch...</p></div>
+  <!-- Content -->
+  <div id="content">
+    <!-- HOME -->
+    <div class="screen active" id="sc-home">
+      <div class="screen-title">FPL OS</div>
+      <div class="stat-row" id="h-stats">
+        <div class="stat"><div class="stat-val g" id="h-rank">—</div><div class="stat-lbl">Overall rank</div></div>
+        <div class="stat"><div class="stat-val" id="h-pts">—</div><div class="stat-lbl">Total pts</div></div>
+        <div class="stat"><div class="stat-val" id="h-gw">—</div><div class="stat-lbl">GW pts</div></div>
+      </div>
+      <div class="section-lbl">This week's decisions</div>
+      <div id="dec-grid" class="dec-grid">
+        <div class="loading"><div class="spin"></div><p>Loading your team...</p></div>
+      </div>
+      <div class="section-lbl">Chip status</div>
+      <div id="chip-mini" class="chip-grid"></div>
+    </div>
+
+    <!-- MY TEAM -->
+    <div class="screen" id="sc-team">
+      <div class="screen-title">My squad</div>
+      <div id="team-body">
+        <div class="loading"><div class="spin"></div><p>Building pitch...</p></div>
+      </div>
+    </div>
+
+    <!-- FIXTURES -->
+    <div class="screen" id="sc-fix">
+      <div class="screen-title">Fixture difficulty</div>
+      <div id="fix-body">
+        <div class="loading"><div class="spin"></div><p>Fetching fixtures...</p></div>
+      </div>
+    </div>
+
+    <!-- TRANSFERS -->
+    <div class="screen" id="sc-tr">
+      <div class="screen-title">Transfer lab</div>
+      <div id="tr-body">
+        <div class="loading"><div class="spin"></div><p>Analysing squad...</p></div>
+      </div>
+    </div>
+
+    <!-- BRIEF -->
+    <div class="screen" id="sc-brief">
+      <div class="screen-title">Weekly brief</div>
+      <div class="card accent" style="margin-bottom:14px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px">AI Strategy · Claude</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px">Analyses your actual squad, upcoming fixtures, and form. One captain, one transfer, chip timing, danger flags.</p>
+        <button class="btn btn-p btn-sm" onclick="generateBrief()">Generate this week's brief</button>
+      </div>
+      <div id="thinking" class="thinking" style="display:none">
+        <div class="td"></div><div class="td"></div><div class="td"></div>
+        <span style="margin-left:6px">Claude is thinking...</span>
+      </div>
+      <div id="brief-out"></div>
     </div>
   </div>
 
-  <!-- FIXTURES -->
-  <div class="screen" id="sc-fix">
-    <div class="screen-title">Fixture difficulty</div>
-    <div id="fix-body">
-      <div class="loading"><div class="spin"></div><p>Fetching fixtures...</p></div>
-    </div>
-  </div>
-
-  <!-- TRANSFERS -->
-  <div class="screen" id="sc-tr">
-    <div class="screen-title">Transfer lab</div>
-    <div id="tr-body">
-      <div class="loading"><div class="spin"></div><p>Analysing squad...</p></div>
-    </div>
-  </div>
-
-  <!-- BRIEF -->
-  <div class="screen" id="sc-brief">
-    <div class="screen-title">Weekly brief</div>
-    <div class="card accent" style="margin-bottom:14px">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px">AI Strategy · Claude</div>
-      <p style="font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px">Analyses your actual squad, upcoming fixtures, and form. Gives you one captain, one transfer, chip timing, and danger flags.</p>
-      <button class="btn btn-p btn-sm" onclick="generateBrief()">Generate this week's brief</button>
-    </div>
-    <div id="thinking" class="thinking" style="display:none">
-      <div class="td"></div><div class="td"></div><div class="td"></div>
-      <span style="margin-left:4px">Claude is thinking...</span>
-    </div>
-    <div id="brief-out"></div>
-  </div>
+  <!-- Mobile bottom nav -->
+  <nav id="nav">
+    <button class="nb active" onclick="go('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="nb" onclick="go('team',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Squad
+    </button>
+    <button class="nb" onclick="go('fix',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      Fixtures
+    </button>
+    <button class="nb" onclick="go('tr',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      Transfers
+    </button>
+    <button class="nb" onclick="go('brief',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Brief
+    </button>
+  </nav>
 </div>
-
-<nav id="nav">
-  <button class="nb active" onclick="go('home',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Home
-  </button>
-  <button class="nb" onclick="go('team',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-    Squad
-  </button>
-  <button class="nb" onclick="go('fix',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-    Fixtures
-  </button>
-  <button class="nb" onclick="go('tr',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
-    Transfers
-  </button>
-  <button class="nb" onclick="go('brief',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Brief
-  </button>
-</nav>
 
 <script>
 const TEAM_ID = 3008614;
-const API = '';
-
 let S = { bootstrap:null, entry:null, picks:null, fixtures:null, history:null, gw:null };
 
 function go(id, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nb, .sb-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('sc-' + id).classList.add('active');
-  btn.classList.add('active');
+  // activate all matching buttons (mobile + desktop)
+  document.querySelectorAll('.nb, .sb-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+  });
   document.getElementById('content').scrollTop = 0;
 }
 
 async function apiFetch(path) {
-  const r = await fetch(API + path);
+  const r = await fetch(path);
   if (!r.ok) throw new Error('Failed: ' + path);
   return r.json();
 }
@@ -292,15 +388,11 @@ function fmtRank(n) {
 }
 
 function fdrCls(d) { return ['fc1','fc2','fc3','fc4','fc5'][Math.min(d,5)-1]||'fc3'; }
-
 function shirtCls(et) { return ['s-gkp','s-def','s-mid','s-fwd'][et-1]||'s-mid'; }
-
 function tagCls(et) { return ['t-gkp','t-def','t-mid','t-fwd'][et-1]||'t-mid'; }
 function tagLbl(et) { return ['GKP','DEF','MID','FWD'][et-1]||''; }
-
 function posName(et) { return ['GKP','DEF','MID','FWD'][et-1]||''; }
 
-// Deadline
 function startDeadline(events) {
   const now = new Date();
   const next = events.find(e => new Date(e.deadline_time) > now);
@@ -310,27 +402,23 @@ function startDeadline(events) {
 
   function update() {
     const diff = dl - new Date();
-    if (diff <= 0) { document.getElementById('dtime').textContent = 'Deadline passed'; return; }
+    if (diff <= 0) { ['dtime','dtime-sb'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = 'Deadline passed'; }); return; }
     const h = Math.floor(diff/3600000);
     const m = Math.floor((diff%3600000)/60000);
     const s = Math.floor((diff%60000)/1000);
-    let txt = h >= 24 ? Math.floor(h/24) + 'd ' + (h%24) + 'h' : h + 'h ' + m + 'm ' + s + 's';
-    document.getElementById('dtime').textContent = txt;
-    const dot = document.getElementById('ddot');
-    const time = document.getElementById('dtime');
+    const txt = h >= 24 ? Math.floor(h/24) + 'd ' + (h%24) + 'h' : h + 'h ' + m + 'm ' + s + 's';
+    ['dtime','dtime-sb'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = txt; });
     const cls = h < 6 ? 'danger' : h < 24 ? 'warn' : 'safe';
-    dot.className = 'dot ' + cls;
-    time.className = 'd-time ' + cls;
+    ['ddot','ddot-sb'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'dot ' + cls; });
+    ['dtime','dtime-sb'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'd-time ' + cls; });
   }
   update();
   setInterval(update, 1000);
 }
 
-// Home
 function renderHome() {
   const { entry, picks, bootstrap, gw } = S;
   if (!entry) return;
-
   document.getElementById('h-rank').textContent = fmtRank(entry.summary_overall_rank);
   document.getElementById('h-pts').textContent = entry.summary_overall_points || '—';
   document.getElementById('h-gw').textContent = entry.summary_event_points || '—';
@@ -342,20 +430,16 @@ function renderHome() {
 
   const cap = picks ? picks.picks.find(p => p.is_captain) : null;
   const capEl = cap ? pById[cap.element] : null;
-
   const ownedIds = picks ? picks.picks.map(p => p.element) : [];
+  const bank = picks ? picks.entry_history.bank / 10 : 0;
 
   const topCap = bootstrap ? [...bootstrap.elements]
     .filter(e => e.status === 'a' && e.element_type >= 3 && parseFloat(e.form) > 3)
-    .sort((a,b) => parseFloat(b.form)*parseFloat(b.points_per_game) - parseFloat(a.form)*parseFloat(a.points_per_game))
-    [0] : null;
-
-  const bank = picks ? picks.entry_history.bank / 10 : 0;
+    .sort((a,b) => parseFloat(b.form)*parseFloat(b.points_per_game) - parseFloat(a.form)*parseFloat(a.points_per_game))[0] : null;
 
   const topIn = bootstrap ? [...bootstrap.elements]
     .filter(e => e.status === 'a' && !ownedIds.includes(e.id) && parseFloat(e.form) > 4)
-    .sort((a,b) => parseFloat(b.form)*parseFloat(b.points_per_game) - parseFloat(a.form)*parseFloat(a.points_per_game))
-    [0] : null;
+    .sort((a,b) => parseFloat(b.form)*parseFloat(b.points_per_game) - parseFloat(a.form)*parseFloat(a.points_per_game))[0] : null;
 
   const gwId = gw ? gw.id : '—';
   const transfers = picks ? picks.entry_history.event_transfers : 0;
@@ -381,11 +465,10 @@ function renderHome() {
       <div style="font-size:14px;font-weight:600;line-height:1.5;margin-top:4px">
         ${transfers > 0 ? `${transfers} transfer(s) made${hit > 0 ? ' · -' + hit + 'pt hit' : ' · free'}` : 'No transfers yet this GW'}
       </div>
-      <button class="btn btn-p btn-sm" style="margin-top:10px" onclick="go('brief',document.querySelectorAll('.nb')[4])">Get full brief →</button>
+      <button class="btn btn-p btn-sm" style="margin-top:10px" onclick="go('brief',document.querySelectorAll('.sb-btn')[4]||document.querySelectorAll('.nb')[4])">Get full brief →</button>
     </div>
   `;
 
-  // Chip mini
   const usedChips = S.history ? S.history.chips.map(c => c.name) : [];
   const chips = [
     {name:'Wildcard',key:'wildcard',desc:'Unlimited transfers'},
@@ -404,31 +487,22 @@ function renderHome() {
   }).join('');
 }
 
-// Team
 function renderTeam() {
   const { picks, bootstrap } = S;
-  if (!picks || !bootstrap) {
-    document.getElementById('team-body').innerHTML = '<div class="err">Squad data unavailable. Refresh the page.</div>';
-    return;
-  }
-
+  if (!picks || !bootstrap) { document.getElementById('team-body').innerHTML = '<div class="err">Squad data unavailable.</div>'; return; }
   const pById = {};
   bootstrap.elements.forEach(e => pById[e.id] = e);
   const tMap = {};
   bootstrap.teams.forEach(t => tMap[t.id] = t);
-
   const starters = picks.picks.slice(0,11);
   const bench = picks.picks.slice(11);
 
   function row(ps) {
     return `<div class="p-row">${ps.map(p => {
-      const el = pById[p.element];
-      if (!el) return '';
+      const el = pById[p.element]; if (!el) return '';
       const team = tMap[el.team];
-      const sc = shirtCls(el.element_type);
-      const inj = el.status !== 'a';
       return `<div class="pslot">
-        <div class="pshirt ${sc}${p.is_captain?' cap':''}${p.is_vice_captain?' vc':''}${inj?' inj':''}">
+        <div class="pshirt ${shirtCls(el.element_type)}${p.is_captain?' cap':''}${p.is_vice_captain?' vc':''}${el.status!=='a'?' inj':''}">
           ${team ? team.short_name.slice(0,3) : '?'}
         </div>
         <div class="pname">${el.web_name}</div>
@@ -437,226 +511,168 @@ function renderTeam() {
       </div>`;
     }).join('')}</div>`;
   }
-
-  function byPos(ps, pos) { return ps.filter(p => { const el = pById[p.element]; return el && el.element_type === pos; }); }
+  function byPos(ps,pos){ return ps.filter(p=>{ const el=pById[p.element]; return el&&el.element_type===pos; }); }
 
   const ph = picks.entry_history;
-  const totalVal = (ph.value/10).toFixed(1);
-  const bankVal = (ph.bank/10).toFixed(1);
-
   document.getElementById('team-body').innerHTML = `
     <div class="stat-row">
       <div class="stat"><div class="stat-val g">${ph.points||0}</div><div class="stat-lbl">GW pts</div></div>
       <div class="stat"><div class="stat-val">${ph.total_points||0}</div><div class="stat-lbl">Total</div></div>
-      <div class="stat"><div class="stat-val">£${bankVal}m</div><div class="stat-lbl">Bank</div></div>
+      <div class="stat"><div class="stat-val">£${(ph.bank/10).toFixed(1)}m</div><div class="stat-lbl">Bank</div></div>
     </div>
     <div class="stat-row">
-      <div class="stat"><div class="stat-val">£${totalVal}m</div><div class="stat-lbl">Value</div></div>
+      <div class="stat"><div class="stat-val">£${(ph.value/10).toFixed(1)}m</div><div class="stat-lbl">Value</div></div>
       <div class="stat"><div class="stat-val ${ph.event_transfers_cost>0?'r':'g'}">${ph.event_transfers_cost>0?'-'+ph.event_transfers_cost+'pt':'Free'}</div><div class="stat-lbl">Hit</div></div>
       <div class="stat"><div class="stat-val">${ph.event_transfers||0}</div><div class="stat-lbl">Transfers</div></div>
     </div>
     <div class="pitch">
-      ${row(byPos(starters,1))}
-      ${row(byPos(starters,2))}
-      ${row(byPos(starters,3))}
-      ${row(byPos(starters,4))}
+      ${row(byPos(starters,1))}${row(byPos(starters,2))}${row(byPos(starters,3))}${row(byPos(starters,4))}
     </div>
     <div class="section-lbl">Bench</div>
     <div class="bench-scroll">
-      ${bench.map((p,i) => {
-        const el = pById[p.element];
-        if (!el) return '';
-        const team = tMap[el.team];
-        return `<div class="pslot" style="min-width:58px">
+      ${bench.map((p,i)=>{ const el=pById[p.element]; if(!el) return ''; const team=tMap[el.team];
+        return `<div class="pslot" style="min-width:60px">
           <div style="font-size:8px;color:var(--text3);text-align:center;margin-bottom:2px">Sub ${i+1}</div>
           <div class="pshirt ${shirtCls(el.element_type)}" style="opacity:.55">${team?team.short_name.slice(0,3):'?'}</div>
           <div class="pname">${el.web_name}</div>
           <div class="ppts" style="color:var(--text3)">${el.event_points||0}</div>
           <div class="pprice">£${(el.now_cost/10).toFixed(1)}m</div>
-        </div>`;
-      }).join('')}
+        </div>`; }).join('')}
     </div>
-
     ${S.history ? `
-    <div class="section-lbl" style="margin-top:16px">Season history</div>
+    <div class="section-lbl" style="margin-top:16px">Season history · last 10 GWs</div>
     <div class="card">
       <div class="hist-row hist-head"><div>GW</div><div>Pts</div><div>Rank</div><div>Value</div></div>
-      ${S.history.current.slice(-10).reverse().map(h => `
+      ${S.history.current.slice(-10).reverse().map(h=>`
         <div class="hist-row">
           <div style="color:var(--text3)">GW${h.event}</div>
-          <div style="font-weight:600">${h.points - (h.event_transfers_cost||0)}</div>
+          <div style="font-weight:600">${h.points-(h.event_transfers_cost||0)}</div>
           <div style="font-size:11px;color:var(--text2)">${fmtRank(h.overall_rank)}</div>
           <div style="font-size:11px;color:var(--text3)">£${(h.value/10).toFixed(1)}m</div>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>` : ''}
   `;
 }
 
-// Fixtures
 function renderFixtures() {
   const { bootstrap, fixtures, gw } = S;
-  if (!bootstrap || !fixtures) {
-    document.getElementById('fix-body').innerHTML = '<div class="err">Fixture data unavailable.</div>';
-    return;
-  }
-
+  if (!bootstrap || !fixtures) { document.getElementById('fix-body').innerHTML = '<div class="err">Fixture data unavailable.</div>'; return; }
   const gwId = gw ? gw.id : 1;
-  const gws = [gwId, gwId+1, gwId+2, gwId+3, gwId+4];
-  const teams = bootstrap.teams;
+  const gws = [gwId,gwId+1,gwId+2,gwId+3,gwId+4];
   const tMap = {};
-  teams.forEach(t => tMap[t.id] = t);
-
+  bootstrap.teams.forEach(t => tMap[t.id] = t);
   const tf = {};
-  teams.forEach(t => tf[t.id] = {});
+  bootstrap.teams.forEach(t => tf[t.id] = {});
   fixtures.forEach(f => {
     if (!gws.includes(f.event)) return;
-    if (!tf[f.team_h]) tf[f.team_h] = {};
-    if (!tf[f.team_a]) tf[f.team_a] = {};
-    if (!tf[f.team_h][f.event]) tf[f.team_h][f.event] = [];
-    if (!tf[f.team_a][f.event]) tf[f.team_a][f.event] = [];
-    tf[f.team_h][f.event].push({opp:f.team_a, diff:f.team_h_difficulty, home:true});
-    tf[f.team_a][f.event].push({opp:f.team_h, diff:f.team_a_difficulty, home:false});
+    if (!tf[f.team_h]) tf[f.team_h]={};
+    if (!tf[f.team_a]) tf[f.team_a]={};
+    if (!tf[f.team_h][f.event]) tf[f.team_h][f.event]=[];
+    if (!tf[f.team_a][f.event]) tf[f.team_a][f.event]=[];
+    tf[f.team_h][f.event].push({opp:f.team_a,diff:f.team_h_difficulty,home:true});
+    tf[f.team_a][f.event].push({opp:f.team_h,diff:f.team_a_difficulty,home:false});
   });
-
-  const ranked = teams.map(t => {
+  const ranked = bootstrap.teams.map(t => {
     const fxs = gws.map(g => (tf[t.id]||{})[g]||[]);
-    const total = fxs.reduce((s,fx) => s + (fx[0]?fx[0].diff:3), 0);
-    return {t, fxs, total};
-  }).sort((a,b) => a.total - b.total);
+    const total = fxs.reduce((s,fx) => s+(fx[0]?fx[0].diff:3),0);
+    return {t,fxs,total};
+  }).sort((a,b) => a.total-b.total);
 
   document.getElementById('fix-body').innerHTML = `
-    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;margin-bottom:10px">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#007A52;vertical-align:middle;margin-right:3px"></span>Easy</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#333;vertical-align:middle;margin-right:3px"></span>Neutral</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#7A0000;vertical-align:middle;margin-right:3px"></span>Hard</span>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;margin-bottom:12px;color:var(--text2)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#007A52;vertical-align:middle;margin-right:4px"></span>Easy (1-2)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#333;vertical-align:middle;margin-right:4px"></span>Neutral (3)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#7A0000;vertical-align:middle;margin-right:4px"></span>Hard (4-5)</span>
     </div>
     <div class="fdr-scroll">
       <table class="fdr-tbl">
-        <thead><tr>
-          <th>Team</th>
-          ${gws.map(g => `<th>GW${g}</th>`).join('')}
-        </tr></thead>
-        <tbody>
-          ${ranked.map(({t, fxs}) => `<tr>
-            <td>${t.short_name}</td>
-            ${fxs.map(fx => {
-              if (!fx.length) return `<td><span class="fc fc3" style="opacity:.4">BGW</span></td>`;
-              const f = fx[0];
-              const opp = tMap[f.opp];
-              return `<td><span class="fc ${fdrCls(f.diff)}">${opp?opp.short_name:'?'}${f.home?'':' A'}</span></td>`;
-            }).join('')}
-          </tr>`).join('')}
-        </tbody>
+        <thead><tr><th>Team</th>${gws.map(g=>`<th>GW${g}</th>`).join('')}</tr></thead>
+        <tbody>${ranked.map(({t,fxs})=>`<tr>
+          <td>${t.short_name}</td>
+          ${fxs.map(fx => {
+            if (!fx.length) return `<td><span class="fc fc3" style="opacity:.4">BGW</span></td>`;
+            const f=fx[0]; const opp=tMap[f.opp];
+            return `<td><span class="fc ${fdrCls(f.diff)}">${opp?opp.short_name:'?'}${f.home?'':' A'}</span></td>`;
+          }).join('')}
+        </tr>`).join('')}</tbody>
       </table>
     </div>
   `;
 }
 
-// Transfers
 function renderTransfers() {
   const { picks, bootstrap } = S;
-  if (!picks || !bootstrap) {
-    document.getElementById('tr-body').innerHTML = '<div class="err">Squad data unavailable.</div>';
-    return;
-  }
-
+  if (!picks || !bootstrap) { document.getElementById('tr-body').innerHTML = '<div class="err">Squad data unavailable.</div>'; return; }
   const pById = {};
   bootstrap.elements.forEach(e => pById[e.id] = e);
   const tMap = {};
   bootstrap.teams.forEach(t => tMap[t.id] = t);
-
   const owned = picks.picks.map(p => pById[p.element]).filter(Boolean);
   const ownedIds = owned.map(p => p.id);
   const bank = picks.entry_history.bank / 10;
-
-  const weak = owned
-    .filter(p => p.element_type > 1)
-    .map(p => ({ p, score: parseFloat(p.form||0) * parseFloat(p.points_per_game||0) }))
-    .sort((a,b) => a.score - b.score)
-    .slice(0,3);
-
-  const suggestions = weak.map(({p: out}) => {
-    const budget = (out.now_cost/10) + bank;
-    const inn = bootstrap.elements
-      .filter(e => e.element_type === out.element_type && e.status === 'a' && !ownedIds.includes(e.id) && e.now_cost/10 <= budget + 0.1)
-      .sort((a,b) => parseFloat(b.form||0)*parseFloat(b.points_per_game||0) - parseFloat(a.form||0)*parseFloat(a.points_per_game||0))
-      [0];
-    return { out, inn };
+  const weak = owned.filter(p=>p.element_type>1)
+    .map(p=>({p,score:parseFloat(p.form||0)*parseFloat(p.points_per_game||0)}))
+    .sort((a,b)=>a.score-b.score).slice(0,3);
+  const suggestions = weak.map(({p:out})=>{
+    const budget=(out.now_cost/10)+bank;
+    const inn=bootstrap.elements
+      .filter(e=>e.element_type===out.element_type&&e.status==='a'&&!ownedIds.includes(e.id)&&e.now_cost/10<=budget+0.1)
+      .sort((a,b)=>parseFloat(b.form||0)*parseFloat(b.points_per_game||0)-parseFloat(a.form||0)*parseFloat(a.points_per_game||0))[0];
+    return {out,inn};
   });
-
   const ph = picks.entry_history;
-
   document.getElementById('tr-body').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-size:24px;font-weight:700">£${bank.toFixed(1)}m</div>
-          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Available bank</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:24px;font-weight:700">${ph.event_transfers_cost > 0 ? '<span style="color:var(--red)">-'+ph.event_transfers_cost+'pt</span>' : '<span style="color:var(--green)">Free</span>'}</div>
-          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">This GW</div>
-        </div>
+        <div><div style="font-size:24px;font-weight:700">£${bank.toFixed(1)}m</div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Available bank</div></div>
+        <div style="text-align:right"><div style="font-size:24px;font-weight:700">${ph.event_transfers_cost>0?`<span style="color:var(--red)">-${ph.event_transfers_cost}pt</span>`:`<span style="color:var(--green)">Free</span>`}</div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">This GW</div></div>
       </div>
     </div>
-
     <div class="section-lbl">Suggested moves</div>
-    ${suggestions.map(({out, inn}) => `
+    ${suggestions.map(({out,inn})=>`
       <div class="card" style="margin-bottom:10px">
         <div class="tr-out">
           <div class="tr-lbl out">Transfer out</div>
           <div class="tr-player">${out.web_name} <span class="tag ${tagCls(out.element_type)}">${tagLbl(out.element_type)}</span></div>
           <div class="tr-meta">${(tMap[out.team]||{}).short_name||''} · £${(out.now_cost/10).toFixed(1)}m · ${parseFloat(out.form||0).toFixed(1)} form</div>
         </div>
-        ${inn ? `<div class="tr-in" style="margin-top:12px">
+        ${inn?`<div class="tr-in" style="margin-top:12px">
           <div class="tr-lbl in">Transfer in</div>
           <div class="tr-player">${inn.web_name} <span class="tag ${tagCls(inn.element_type)}">${tagLbl(inn.element_type)}</span></div>
           <div class="tr-meta">${(tMap[inn.team]||{}).short_name||''} · £${(inn.now_cost/10).toFixed(1)}m · ${parseFloat(inn.form||0).toFixed(1)} form · ${parseFloat(inn.selected_by_percent||0).toFixed(1)}% owned</div>
-        </div>` : `<div style="margin-top:10px;font-size:11px;color:var(--text3)">No clear replacement within budget</div>`}
-      </div>
-    `).join('')}
-
+        </div>`:`<div style="margin-top:10px;font-size:11px;color:var(--text3)">No clear replacement within budget</div>`}
+      </div>`).join('')}
     <div class="card warn-card">
       <div style="font-size:12px;color:var(--amber);font-weight:700;margin-bottom:5px">⚠️ Transfer discipline</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.6">Never take a hit unless the player coming in is likely to outscore the player going out by more than 4 points this GW. Panic transfers lose mini-leagues.</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">Never take a hit unless the player coming in is likely to outscore the one going out by more than 4 points this GW. Panic transfers lose mini-leagues.</div>
     </div>
-
-    <button class="btn btn-p" style="margin-top:12px" onclick="go('brief',document.querySelectorAll('.nb')[4]);setTimeout(generateBrief,300)">Get AI transfer analysis →</button>
+    <button class="btn btn-p" style="margin-top:12px" onclick="go('brief',document.querySelectorAll('.sb-btn')[4]||document.querySelectorAll('.nb')[4]);setTimeout(generateBrief,300)">Get AI transfer analysis →</button>
   `;
 }
 
-// Brief
 async function generateBrief() {
   const out = document.getElementById('brief-out');
   const thinking = document.getElementById('thinking');
   out.textContent = '';
   thinking.style.display = 'flex';
-
   const { bootstrap, entry, picks, gw } = S;
   const pById = {};
   if (bootstrap) bootstrap.elements.forEach(e => pById[e.id] = e);
   const tMap = {};
   if (bootstrap) bootstrap.teams.forEach(t => tMap[t.id] = t);
-
   let squadStr = 'Not loaded';
   let bank = '—';
   let gwId = gw ? gw.id : '—';
-
   if (picks && bootstrap) {
     squadStr = picks.picks.slice(0,11).map(p => {
-      const el = pById[p.element];
-      if (!el) return '';
-      const team = tMap[el.team];
+      const el = pById[p.element]; if (!el) return '';
       return `${el.web_name} (${posName(el.element_type)}, £${(el.now_cost/10).toFixed(1)}m, form ${el.form}${p.is_captain?' [C]':''})`;
     }).filter(Boolean).join(', ');
     bank = (picks.entry_history.bank/10).toFixed(1);
   }
-
   const rank = entry ? fmtRank(entry.summary_overall_rank) : 'unknown';
   const pts = entry ? entry.summary_overall_points : 'unknown';
   const chipUsed = entry ? entry.active_chip || 'none' : 'unknown';
-
   const prompt = `You are an elite FPL advisor. Be direct, sharp, specific. No generic advice, no padding.
 
 My FPL data:
@@ -676,7 +692,7 @@ One player. Two sentences max. Name their next opponent and why it's a good fixt
 One specific transfer: who out, who in, exact prices, why. If I should hold, say so and why.
 
 3. CHIP TIMING
-Given it's GW${gwId} and I have chips available — tell me which gameweek to use each chip. Be specific with GW numbers. Mention DGWs or BGWs if relevant.
+Given it's GW${gwId} — tell me which gameweek to use each chip. Be specific with GW numbers.
 
 4. DANGER FLAGS
 Two players from my XI who might blank this GW. One sentence each, specific reason.
@@ -689,38 +705,27 @@ Be ruthless. No fluff.`;
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt })
     });
-
     thinking.style.display = 'none';
-
     const reader = r.body.getReader();
     const dec = new TextDecoder();
     let buf = '';
-
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       buf += dec.decode(value, { stream: true });
-      const lines = buf.split('\n');
-      buf = lines.pop();
+      const lines = buf.split('\n'); buf = lines.pop();
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
-        const d = line.slice(6);
-        if (d === '[DONE]') continue;
-        try {
-          const p = JSON.parse(d);
-          if (p.type === 'content_block_delta' && p.delta?.text) {
-            out.textContent += p.delta.text;
-          }
-        } catch {}
+        const d = line.slice(6); if (d === '[DONE]') continue;
+        try { const p = JSON.parse(d); if (p.type==='content_block_delta'&&p.delta?.text) out.textContent += p.delta.text; } catch {}
       }
     }
   } catch(e) {
     thinking.style.display = 'none';
-    out.textContent = 'Could not generate brief.\n\nMake sure ANTHROPIC_API_KEY is set in your Vercel environment variables.\n\nError: ' + e.message;
+    out.textContent = 'Could not generate brief. Make sure ANTHROPIC_API_KEY is set in Vercel environment variables.\n\nError: ' + e.message;
   }
 }
 
-// Init
 async function init() {
   try {
     const [bootstrap, fixtures, entry] = await Promise.all([
@@ -728,44 +733,24 @@ async function init() {
       apiFetch('/api/fixtures'),
       apiFetch('/api/entry?id=' + TEAM_ID)
     ]);
-
-    S.bootstrap = bootstrap;
-    S.fixtures = fixtures;
-    S.entry = entry;
+    S.bootstrap = bootstrap; S.fixtures = fixtures; S.entry = entry;
     S.gw = bootstrap.events.find(e => e.is_current) || bootstrap.events.find(e => e.is_next);
-
     startDeadline(bootstrap.events);
-
     const gwId = S.gw ? S.gw.id : 1;
-
     let picks;
-    try {
-      picks = await apiFetch(`/api/picks?id=${TEAM_ID}&gw=${gwId}`);
-    } catch {
-      if (gwId > 1) {
-        try { picks = await apiFetch(`/api/picks?id=${TEAM_ID}&gw=${gwId-1}`); } catch {}
-      }
-    }
+    try { picks = await apiFetch(`/api/picks?id=${TEAM_ID}&gw=${gwId}`); }
+    catch { if (gwId>1) try { picks = await apiFetch(`/api/picks?id=${TEAM_ID}&gw=${gwId-1}`); } catch {} }
     S.picks = picks;
-
-    try {
-      S.history = await apiFetch(`/api/history?id=${TEAM_ID}`);
-    } catch {}
-
-    renderHome();
-    renderTeam();
-    renderFixtures();
-    renderTransfers();
-
+    try { S.history = await apiFetch(`/api/history?id=${TEAM_ID}`); } catch {}
+    renderHome(); renderTeam(); renderFixtures(); renderTransfers();
   } catch(e) {
-    const errHtml = `<div class="err">Could not connect to FPL API.<br><br>If this just deployed, wait 30 seconds and refresh.<br><br>Error: ${e.message}</div>`;
+    const errHtml = `<div class="err">Could not connect to FPL API.<br><br>Error: ${e.message}<br><br>Try refreshing in a few seconds.</div>`;
     document.getElementById('dec-grid').innerHTML = errHtml;
     document.getElementById('team-body').innerHTML = errHtml;
     document.getElementById('fix-body').innerHTML = errHtml;
     document.getElementById('tr-body').innerHTML = errHtml;
   }
 }
-
 init();
 </script>
 </body>
