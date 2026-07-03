@@ -1119,24 +1119,57 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 async function requestNotificationPermission() {
-  if (!swRegistration) await initNotifications();
-  if (!swRegistration) { alert('Push notifications not supported on this browser.'); return false; }
-  const permission = await Notification.requestPermission();
-  if (permission !== 'granted') { alert('Allow notifications to receive FPL alerts.'); return false; }
+  // iOS Safari requires Notification.requestPermission() to be called
+  // SYNCHRONOUSLY inside the user gesture — no awaits before it
+  if (!('Notification' in window)) {
+    alert('Notifications not supported on this browser.');
+    return false;
+  }
+
+  // Request permission immediately — must be first async op
+  let permission;
   try {
-    const vapidRes = await fetch('/api/vapid');
-    const { publicKey } = await vapidRes.json();
-    const subscription = await swRegistration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicKey)
-    });
-    await fetch('/api/subscribe', {
+    permission = await Notification.requestPermission();
+  } catch(e) {
+    // Older iOS: requestPermission uses callback not promise
+    permission = await new Promise(resolve => Notification.requestPermission(resolve));
+  }
+
+  if (permission !== 'granted') {
+    alert('Please allow notifications when prompted, then tap the button again.');
+    return false;
+  }
+
+  // Now do async work
+  try {
+    if (!swRegistration) {
+      swRegistration = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+    }
+
+    // Check for existing subscription first
+    let subscription = await swRegistration.pushManager.getSubscription();
+
+    if (!subscription) {
+      const vapidRes = await fetch('/api/vapid');
+      const { publicKey } = await vapidRes.json();
+      subscription = await swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicKey)
+      });
+    }
+
+    const saveRes = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ subscription })
     });
+
+    if (!saveRes.ok) throw new Error('Subscribe endpoint returned ' + saveRes.status);
+
     localStorage.setItem('notificationsEnabled', 'true');
     showNotificationStatus(true);
+    alert('Alerts armed. You will get notified for injuries, price rises and deadlines.');
     return true;
   } catch(e) {
     alert('Could not subscribe: ' + e.message);
