@@ -13,7 +13,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { subscription } = req.body;
+    const { subscription, clear } = req.body;
+
+    // Allow clearing the subscription
+    if (clear === true) {
+      await fetch(`${KV_URL}/del/push_subscription`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${KV_TOKEN}` }
+      });
+      return res.json({ success: true, message: 'Subscription cleared' });
+    }
+
     if (!subscription) return res.status(400).json({ error: 'No subscription provided' });
 
     // Store subscription in Upstash Redis
