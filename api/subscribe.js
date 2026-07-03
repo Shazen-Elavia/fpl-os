@@ -26,6 +26,21 @@ export default async function handler(req, res) {
 
     if (!subscription) return res.status(400).json({ error: 'No subscription provided' });
 
+    // Explicitly extract fields — iOS Safari PushSubscription prototype fields
+    // are not enumerable and get dropped by JSON.stringify if passed as-is
+    const normalized = {
+      endpoint: subscription.endpoint,
+      expirationTime: subscription.expirationTime || null,
+      keys: {
+        p256dh: subscription.keys ? subscription.keys.p256dh : null,
+        auth: subscription.keys ? subscription.keys.auth : null
+      }
+    };
+
+    if (!normalized.endpoint) {
+      return res.status(400).json({ error: 'Subscription has no endpoint — serialization failed on client' });
+    }
+
     // Store subscription in Upstash Redis
     const response = await fetch(`${KV_URL}/set/push_subscription`, {
       method: 'POST',
@@ -33,7 +48,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${KV_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ value: JSON.stringify(subscription) })
+      body: JSON.stringify({ value: JSON.stringify(normalized) })
     });
 
     if (!response.ok) {
