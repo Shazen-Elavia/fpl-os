@@ -1,3 +1,4 @@
+// v2
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   const KV_URL = process.env.KV_REST_API_URL;
