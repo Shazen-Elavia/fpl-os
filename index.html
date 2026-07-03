@@ -1147,17 +1147,16 @@ async function requestNotificationPermission() {
       await navigator.serviceWorker.ready;
     }
 
-    // Check for existing subscription first
-    let subscription = await swRegistration.pushManager.getSubscription();
+    // Always force a fresh subscription — existing one may be broken
+    const existing = await swRegistration.pushManager.getSubscription();
+    if (existing) await existing.unsubscribe();
 
-    if (!subscription) {
-      const vapidRes = await fetch('/api/vapid');
-      const { publicKey } = await vapidRes.json();
-      subscription = await swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey)
-      });
-    }
+    const vapidRes = await fetch('/api/vapid');
+    const { publicKey } = await vapidRes.json();
+    const subscription = await swRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey)
+    });
 
     // Explicitly serialize PushSubscription — iOS Safari prototype fields
     // are non-enumerable and get dropped by spread/JSON.stringify
