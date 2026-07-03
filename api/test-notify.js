@@ -18,7 +18,12 @@ export default async function handler(req, res) {
       headers: { Authorization: `Bearer ${KV_TOKEN}` }
     });
     const kvData = await kvRes.json();
-    if (kvData.result) pushSubscription = JSON.parse(kvData.result);
+    if (kvData.result) {
+      let raw = kvData.result;
+      if (typeof raw === 'object' && raw.value) raw = raw.value;
+      if (typeof raw === 'string') raw = JSON.parse(raw);
+      pushSubscription = raw;
+    }
   } catch(e) {
     return res.status(500).json({ error: 'KV read failed: ' + e.message });
   }

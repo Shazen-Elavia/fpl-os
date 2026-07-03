@@ -26,7 +26,10 @@ export default async function handler(req, res) {
     });
     const kvData = await kvRes.json();
     if (kvData.result) {
-      pushSubscription = JSON.parse(kvData.result);
+      let raw = kvData.result;
+      if (typeof raw === 'object' && raw.value) raw = raw.value;
+      if (typeof raw === 'string') raw = JSON.parse(raw);
+      pushSubscription = raw;
     }
   } catch(e) {
     return res.status(500).json({ error: 'Could not read subscription from KV: ' + e.message });

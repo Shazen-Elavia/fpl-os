@@ -12,7 +12,11 @@ export default async function handler(req, res) {
     if (!kvData.result) return res.json({ stored: null, message: 'Nothing in Upstash' });
 
     // Parse and show structure without exposing sensitive keys
-    const sub = JSON.parse(kvData.result);
+    // Upstash wraps the value — unwrap it
+    let raw = kvData.result;
+    if (typeof raw === 'object' && raw.value) raw = raw.value;
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    const sub = raw;
     res.json({
       hasEndpoint: !!sub.endpoint,
       endpointPrefix: sub.endpoint ? sub.endpoint.substring(0, 40) + '...' : null,
